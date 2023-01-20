@@ -1,3 +1,4 @@
+// Get all boards
 export const boardListAllReducer = (state = { boards: [] }, action) => {
     switch(action.type) {
         case 'BOARD_LIST_ALL_REQUEST':
@@ -24,6 +25,7 @@ export const boardListAllReducer = (state = { boards: [] }, action) => {
 }
 
 
+// Get single board
 export const boardListReducer = (state = { board: []} , action) => {
     switch(action.type) {
         case 'BOARD_LIST_REQUEST':
@@ -48,5 +50,33 @@ export const boardListReducer = (state = { board: []} , action) => {
             return state
     }
 }
+
+
+// Update subtask and task status
+export const updatedTaskStatus = (state = { task: []}, action) => {
+    switch(action.type) {
+        case 'SUBTASK_STATUS_REQUEST':
+            return {
+                loading: true,
+            }
+
+        case 'SUBTASK_STATUS_SUCCESS':
+            return {
+                loading: false,
+                success:true,
+                task: action.payload
+            }
+
+        case 'SUBTASK_STATUS_FAIL':
+            return {
+                loading: false,
+                error: action.payload
+            }
+
+        default:
+            return state
+    }
+}
+
 
 

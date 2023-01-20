@@ -30,7 +30,6 @@ const Sidebar = () => {
             document.querySelector('.navbar-brand').classList.add('extended')
         }
 
-        
     }, [hideBar])
     
     

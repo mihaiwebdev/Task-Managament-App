@@ -1,14 +1,18 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { listAllBoards, listBoard } from '../actions/boardActions'
+import { listAllBoards } from '../actions/boardActions'
 import Header from '../Components/Header'
 import Sidebar from '../Components/Sidebar'
 import Loader from '../Components/Loader'
 import Message from '../Components/Message'
+import Task from '../Components/Task'
+
 
 const HomeScreen = () => {
 
     const dispatch = useDispatch()
+
+    const [taskData, setTaskData] = useState()
 
     const boardList = useSelector(state => state.boardList)
     const { error, loading, board } = boardList
@@ -16,10 +20,26 @@ const HomeScreen = () => {
     useEffect(() => {
 
         dispatch(listAllBoards())
-        
-        dispatch(listBoard(1))
 
     }, [dispatch])
+
+    
+    const showTaskModal = (task) => {
+        document.querySelector('.task-modal').style.display = 'block'
+
+        let subtasks = []
+
+        board[3].subtasks.map(subtask => {
+            if (subtask.task === task.id) {
+                subtasks.push(subtask)
+            }
+
+            return null
+        })
+        
+        setTaskData([task, subtasks])        
+    }
+
 
     return (
         <>
@@ -30,7 +50,7 @@ const HomeScreen = () => {
                 <Sidebar />
 
                 {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> 
-                 :  board.length < 1 ? (<div></div>)
+                 :  board.length < 1 ? (<div className='w-100 d-flex justify-content-center align-items-center'><p className='gray-text'>No board selected ...</p></div>)
                  : (     
                         <div className='tasks-layout'>
                             {board[1].cols.length < 1 
@@ -56,7 +76,7 @@ const HomeScreen = () => {
                                         
                                         {board[2].tasks.map(task => 
                                             task.column === col.id && (
-                                                <div key={task.id} className="task-card">
+                                                <div key={task.id} className="task-card" onClick={() => showTaskModal(task)}>
                                                     <h2 className="task-card-title">{task.title}</h2>
                                                     <p className="task-card-subtasks">subtasks</p>
                                                 </div>
@@ -75,6 +95,9 @@ const HomeScreen = () => {
                         </div>
                     )
                 }
+
+                <Task taskData={taskData}/>
+                
             </main>
         </>
     )

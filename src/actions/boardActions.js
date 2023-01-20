@@ -33,7 +33,7 @@ export const listBoard = (id) => async (dispatch) => {
 
         dispatch({ type: 'BOARD_LIST_REQUEST' })
 
-        const { data } = await axios.get(`/api/boards/${id}`)
+        const { data } = await axios.get(`/api/board/${id}`)
 
         dispatch({
             type: 'BOARD_LIST_SUCCESS',
@@ -50,5 +50,38 @@ export const listBoard = (id) => async (dispatch) => {
         })
     }
 }
+
+
+// Update subtask status
+export const updatedTaskStatus = (id, isCompleted, taskID) => async (dispatch) => {
+
+    try {
+
+        dispatch({ type: 'SUBTASK_STATUS_REQUEST' })
+
+        const { data } = await axios.put(
+            `/api/subtask/status/`,
+            {'id': id,
+            'isCompleted': isCompleted,
+            'taskID': taskID 
+            },
+        )
+
+        dispatch({
+            type: 'SUBTASK_STATUS_SUCCESS',
+            payload: data
+        })
+
+
+    } catch (error) {
+        dispatch({
+            type: 'SUBTASK_STATUS_FAIL',
+            payload: error.response && error.response.data.detail 
+            ? error.response.data.detail
+            : error.message
+        })
+    }
+}
+
 
 
