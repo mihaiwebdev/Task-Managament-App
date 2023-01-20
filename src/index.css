@@ -75,7 +75,7 @@ body {
 .btn-primary-s {
   background: var(--purple);
   border-radius: 20px;
-  width: 255px;
+  /* width: 255px; */
   height: 40px;
   font-weight: 700;
   font-size: 13px;
@@ -91,7 +91,7 @@ body {
 .btn-secondary {
   background: rgba(99, 95, 199, 0.1);
   border-radius: 20px;
-  width: 255px;
+  /* width: 255px; */
   height: 40px;
   font-weight: 700;
   font-size: 13px;
@@ -523,10 +523,12 @@ body {
 }
 
 .subtask-title {
-  margin-bottom: 10px !important;
+  margin-bottom: 5px !important;
   font-size: 12px;
   line-height: 15.12px;
   margin-top: 10px;
+  font-weight: 700;
+  color: var(--gray);
 }
 
 .subtask {
@@ -656,4 +658,59 @@ body {
 .settings-dots {
   padding: 5px;
   cursor: pointer;
+}
+
+
+/* Edit task modal */
+#edit-task {
+  display: flex;
+  flex-direction: column;
+}
+
+#edit-task .form-group {
+  display: flex;
+  flex-direction: column;
+  margin: 8px 0;
+}
+
+#edit-task .form-group input, textarea {
+  border: 1px solid rgba(130, 143, 163, 0.25);
+  padding: 7px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 23px;
+  font-weight: 500;
+
+}
+
+#edit-task .form-group textarea {
+  height: 112px;
+  font-size: 13px;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+#edit-task .subtask-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#edit-task .subtask-input svg {
+  cursor: pointer;
+  
+}
+
+#edit-task .subtask-input input {
+  width: 100%;
+  margin: 10px 15px 10px 0px;
+}
+
+#edit-task .form-group .btn-secondary {
+  margin-top: 8px;
+  margin-bottom: 5px;
+}
+
+#edit-task .task-status {
+  margin-bottom: 25px;
 }

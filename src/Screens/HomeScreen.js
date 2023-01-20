@@ -6,7 +6,7 @@ import Sidebar from '../Components/Sidebar'
 import Loader from '../Components/Loader'
 import Message from '../Components/Message'
 import Task from '../Components/Task'
-
+import EditTask from '../Components/EditTask'
 
 const HomeScreen = () => {
 
@@ -17,13 +17,42 @@ const HomeScreen = () => {
     const boardList = useSelector(state => state.boardList)
     const { error, loading, board } = boardList
 
+    let tasksWithSubtasks = []
+
     useEffect(() => {
+        
 
         dispatch(listAllBoards())
 
-    }, [dispatch])
-
+        
+    }, [dispatch, board])
     
+
+    if (board.length > 0) {
+            
+        const newTaskObj = board[2].tasks.map(task => {
+
+            let subtasks = []
+
+            board[3].subtasks.map(subtask => {
+                
+                if (subtask.task === task.id) {
+
+                    subtasks.push(subtask)
+                }
+
+                return null
+            })
+
+            return task = {...task, "subtasks": subtasks}
+            
+        }) 
+       
+        
+        tasksWithSubtasks.push(newTaskObj)
+    } 
+
+
     const showTaskModal = (task) => {
         document.querySelector('.task-modal').style.display = 'block'
 
@@ -74,11 +103,14 @@ const HomeScreen = () => {
                                             <h2 className='col-title ms-2'>{col.name.toUpperCase()}</h2>
                                         </div>
                                         
-                                        {board[2].tasks.map(task => 
+                                        {tasksWithSubtasks[0].map(task => 
                                             task.column === col.id && (
                                                 <div key={task.id} className="task-card" onClick={() => showTaskModal(task)}>
                                                     <h2 className="task-card-title">{task.title}</h2>
-                                                    <p className="task-card-subtasks">subtasks</p>
+                                                    <p className="task-card-subtasks">
+                                                        subtasks <span>{task.subtasks.filter(sbtask => sbtask.isCompleted === true ).length} </span> 
+                                                         of {task.subtasks.length}
+                                                        </p>
                                                 </div>
                                             )
                                         )}
@@ -97,6 +129,8 @@ const HomeScreen = () => {
                 }
 
                 <Task taskData={taskData}/>
+
+                <EditTask taskData={taskData} />
                 
             </main>
         </>

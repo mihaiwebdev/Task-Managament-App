@@ -57,7 +57,7 @@ export const updatedTaskStatus = (id, isCompleted, taskID) => async (dispatch) =
 
     try {
 
-        dispatch({ type: 'SUBTASK_STATUS_REQUEST' })
+        dispatch({ type: 'TASK_STATUS_REQUEST' })
 
         const { data } = await axios.put(
             `/api/subtask/status/`,
@@ -68,14 +68,14 @@ export const updatedTaskStatus = (id, isCompleted, taskID) => async (dispatch) =
         )
 
         dispatch({
-            type: 'SUBTASK_STATUS_SUCCESS',
+            type: 'TASK_STATUS_SUCCESS',
             payload: data
         })
 
 
     } catch (error) {
         dispatch({
-            type: 'SUBTASK_STATUS_FAIL',
+            type: 'TASK_STATUS_FAIL',
             payload: error.response && error.response.data.detail 
             ? error.response.data.detail
             : error.message
