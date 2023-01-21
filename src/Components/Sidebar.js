@@ -38,6 +38,7 @@ const Sidebar = () => {
         document.getElementById(`taskName-${id}`).classList.add('board-task-active')
         
         dispatch(listBoard(id))
+
     }
     
     

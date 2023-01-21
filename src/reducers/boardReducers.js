@@ -52,36 +52,5 @@ export const boardListReducer = (state = { board: []} , action) => {
 }
 
 
-// Update subtask and task status
-export const updatedTaskStatus = (state = { taskUpdate: [], subtaskUpdate: []}, action) => {
-    switch(action.type) {
-        case 'TASK_STATUS_REQUEST':
-            return {
-                loading: true,
-            }
-
-        case 'TASK_STATUS_SUCCESS':
-            return {
-                loading: false,
-                success:true,
-                taskUpdate: action.payload.task,
-                subtaskUpdate: action.payload.subtask
-            }
-
-        case 'TASK_STATUS_FAIL':
-            return {
-                loading: false,
-                error: action.payload
-            }
-        
-        case 'TASK_STATUS_RESET':
-            return state = { }
-
-
-        default:
-            return state
-    }
-}
-
 
 

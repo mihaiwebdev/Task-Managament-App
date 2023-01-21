@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { updatedTaskStatus, listBoard } from '../actions/boardActions'
+import { listBoard } from '../actions/boardActions'
+import { updateTaskStatus } from '../actions/taskActions'
 import Message from '../Components/Message'
+import Loader from '../Components/Loader'
 
 
-const Task = ( {taskData} ) => {
+const Task = () => {
 
     const dispatch = useDispatch()
 
@@ -15,6 +17,10 @@ const Task = ( {taskData} ) => {
 
     const taskStatus = useSelector(state => state.taskStatus)
     const { success, taskUpdate } = taskStatus
+
+    const taskList = useSelector(state => state.taskList)
+    const { loading:taskLoading, error:taskError, task, subtasks } = taskList
+
 
     const showSettings = () => {
         
@@ -30,15 +36,18 @@ const Task = ( {taskData} ) => {
     const hideModal = (e) => {
         if (e.target.classList.contains('task-modal')) {
 
-            dispatch({type: 'TASK_STATUS_RESET'})
             document.querySelector('.task-modal').style.display = 'none'
             setShowActions(false)
+
+            if (success) {
+                dispatch({type: 'TASK_STATUS_RESET'})
+            }
         }
     }
 
     const setTaskStatus = (e, id) => {
         
-        dispatch(updatedTaskStatus(id, e.target.checked, taskData[0].id))
+        dispatch(updateTaskStatus(id, e.target.checked, task.id))
         
         document.getElementById(`subtask-title-${id}`).classList.toggle('subtask-done')
 
@@ -54,11 +63,14 @@ const Task = ( {taskData} ) => {
 
     return (
         <div className='task-modal' onClick={(e) => hideModal(e)}>
-            {!taskData ? <Message variant='danger'> No task data</Message>
-             : 
-                <div className="open-task-card mx-auto">
+           
+            <div className="open-task-card mx-auto">
+
+                {taskLoading ? <Loader/> 
+                : taskError ? <Message variant='danger'> No task data</Message>
+                : (<>
                     <div className='d-flex justify-content-between align-items-center'>
-                        <h2 className="modal-task-title">{taskData[0].title}</h2>
+                        <h2 className="modal-task-title">{task.title}</h2>
                         <div className='settings-dots' onClick={showSettings}>
                             <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg>
                         </div>
@@ -67,16 +79,16 @@ const Task = ( {taskData} ) => {
                             <p className="delete-task">Delete Task</p>
                         </div>
                     </div>
-                    <p className="modal-task-description">{taskData[0].description}</p>
+                    <p className="modal-task-description">{task.description}</p>
 
-                    <p className="subtask-title">Subtasks ({taskData[1].length})</p>
+                    <p className="subtask-title">Subtasks ({subtasks.length})</p>
 
-                    {taskData[1].map(subtask => (
+                    {subtasks.map(subtask => (
 
                         <div key={subtask.id} className='subtask'>
                             <label className="checkbox-container">
                                 <input type="checkbox" onChange={(e) => setTaskStatus(e, subtask.id)}
-                                 defaultChecked={subtask.isCompleted ? true : false} />
+                                defaultChecked={subtask.isCompleted ? true : false} />
                                 <span className="checkmark"></span>
                                 <p id={`subtask-title-${subtask.id}`} className={subtask.isCompleted ? 'subtask-done' : ''}>
                                     {subtask.title}
@@ -89,12 +101,13 @@ const Task = ( {taskData} ) => {
                     <p className="subtask-title mt-3">Current Status</p>
 
                     <div className='task-status'>
-                        <p>{success ? taskUpdate.status : taskData[0].status}</p>
+                        <p>{success ? taskUpdate.status : task.status}</p>
                     </div>
-                    
-                    
-                </div>
-            }
+
+                    </>) 
+                }
+                
+            </div>
 
         </div>
     )

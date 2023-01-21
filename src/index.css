@@ -46,15 +46,22 @@ body {
   overflow: hidden;
 }
 
+input {
+  border: none;
+}
+
 .alert-message {
-  height: 100px;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 #spinner {
-  z-index: 10;
+  display: flex;
+  justify-self: center;
+  align-self: center;
+  
 }
 .btn-primary-l {
   background: var(--purple);
@@ -611,7 +618,6 @@ body {
   border: 1px solid rgba(130, 143, 163, 0.25);
   background-color: transparent;
   color: var(--theme-text);
-  cursor: pointer;
   position: relative;
 }
 
@@ -680,7 +686,8 @@ body {
   font-size: 13px;
   line-height: 23px;
   font-weight: 500;
-
+  color: var(--theme-text);
+  background: transparent;
 }
 
 #edit-task .form-group textarea {
@@ -698,7 +705,6 @@ body {
 
 #edit-task .subtask-input svg {
   cursor: pointer;
-  
 }
 
 #edit-task .subtask-input input {

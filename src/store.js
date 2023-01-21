@@ -2,13 +2,18 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 
-import { boardListReducer, boardListAllReducer,
-         updatedTaskStatus } from './reducers/boardReducers'
+import { boardListReducer, boardListAllReducer, } from './reducers/boardReducers'
+import { updateTaskStatusReducer, deleteSubtaskReducer, getTaskReducer,
+        addSubtaskReducer, editTaskReducer } from './reducers/taskReducers'
 
 const reducer = combineReducers({
     boardsList: boardListAllReducer,
     boardList: boardListReducer,
-    taskStatus: updatedTaskStatus,
+    taskList: getTaskReducer,
+    taskStatus: updateTaskStatusReducer,
+    addSubtask: addSubtaskReducer,
+    deletedSubtask: deleteSubtaskReducer,
+    editedTask: editTaskReducer,
     
 })
 
