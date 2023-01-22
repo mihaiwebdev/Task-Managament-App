@@ -1,13 +1,50 @@
 import { Navbar } from 'react-bootstrap';
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 
 
 const Header = () => {
 
+    const { id } = useParams()
+    const navigate = useNavigate()
+
+    const [showActions, setShowActions] = useState(false)
 
     const boardList = useSelector(state => state.boardList)
     const { board } = boardList
 
+    const [btnDisabled, setBtnDisabled] = useState(true)
+
+    useEffect(() => {
+
+        if (!id) {
+            setBtnDisabled(true)         
+        } else {
+            setBtnDisabled(false)
+        }
+
+    }, [id])
+
+
+    const showSettings = () => {
+        
+        if (showActions) {
+            setShowActions(false)
+
+        } else {
+            setShowActions(true)
+        } 
+
+    }
+
+    const handleDeleteBoard = () => {
+
+    }
+
+    const handleEditBoard = () => {
+
+    }
 
     return (
         <>
@@ -20,19 +57,24 @@ const Header = () => {
             
                     <h3 className='task-title'>{ board.length > 0 ? board[0].board.name : ('')}</h3>
 
-                    <div className='ms-auto'>
-                        <button className='me-4 add-task btn-primary-l'> + Add new Task</button>
-
-                        <button className='p-2' id='settings'>
-                        <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg>
+                    <div className='ms-auto relative'>
+                        <button onClick={() => navigate(`/board/${id}/new-task`)}
+                         disabled={btnDisabled} className={`me-4 add-task ${btnDisabled ? ' opacity-25' : ''} btn-primary-l`}>
+                             + Add new Task
                         </button>
+
+                        <button disabled={btnDisabled} onClick={showSettings} className='p-2' id='settings'>
+                            <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg>
+                        </button>
+
+                        <div className={`modal-actions ${showActions ? 'd-block' : 'd-none'}`}>
+                            <p onClick={handleEditBoard}>Edit Board</p>
+                            <p onClick={handleDeleteBoard} className="delete-task">Delete Board</p>
+                        </div>
                     </div>
 
                 
             </Navbar>
-
-          
-        
         </>
     )
 }

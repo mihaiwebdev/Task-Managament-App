@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { listBoard } from '../actions/boardActions'
+import { useNavigate, useParams } from 'react-router-dom'
 import { deleteSubtask, getTask, createSubtask,
          editTask } from '../actions/taskActions'
 import Message from '../Components/Message'
@@ -10,64 +10,52 @@ import Loader from '../Components/Loader'
 const EditTask = ( ) => {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { id, taskID } = useParams()
 
-    const [taskTitle, setTaskTitle] = useState('')
-    const [taskDescription, setTaskDescription] = useState('')
-
-    const taskStatus = useSelector(state => state.taskStatus)
-    const { success, taskUpdate, error } = taskStatus
+    const [taskTitle, setTaskTitle] = useState('default')
+    const [taskDescription, setTaskDescription] = useState('default')
 
     const taskList = useSelector(state => state.taskList)
     const { loading:taskLoading, error:taskError, task, subtasks } = taskList
-
-    const editedTask = useSelector(state => state.editedTask)
-    const { success:editTaskSuccess, loading:editTaskLoading, error:editTaskError} = editedTask
 
     const addSubtask = useSelector(state => state.addSubtask)
     const { success:addSubtaskSuccess, loading:addSubtaskLoading, error:addSubtaskError} = addSubtask
 
     const deletedSubtask = useSelector(state => state.deletedSubtask)
-    const { success:deleteSuccess, loading:deleteLoading, error:deleteError} = deletedSubtask
-
-    const boardList = useSelector(state => state.boardList)
-    const { board } = boardList
-
+    const { success:deleteSubtaskSuccess, loading:deleteLoading, error:deleteError} = deletedSubtask
 
 
     useEffect(() => {
- 
-        if (deleteSuccess || addSubtaskSuccess) {
-            dispatch(getTask(task.id))
-            dispatch(listBoard(board[0].board.id))
 
+        if (task && task.length === 0){
+            dispatch(getTask(taskID))
+        }
+        
+        if (deleteSubtaskSuccess) {
+            dispatch(getTask(taskID))
             dispatch({type: 'DELETE_SUBTASK_RESET'})
-            dispatch({type: 'ADD_SUBTASK_RESET'})            
+        } 
+        
+        if (addSubtaskSuccess) {
+            dispatch(getTask(taskID))
+            dispatch({type: 'ADD_SUBTASK_RESET'})   
+        }
+        
+        
+    }, [task, taskID,
+        deleteSubtaskSuccess, addSubtaskSuccess, dispatch])
+        
+
+        const hideModal = (e) => {
             
+            if (e.target.classList.contains('task-modal')) {
+            navigate(`/board/${id}`)
         }
-
-
-    }, [task, deleteSuccess, addSubtaskSuccess, editTaskSuccess, board, dispatch])
-
-    const hideModal = (e) => {
-
-        if (e.target.classList.contains('task-modal')) {
-
-            if (success){
-
-                dispatch({type: 'TASK_STATUS_RESET'})
-            }
-
-            if (editTaskSuccess) {
-                dispatch(listBoard(board[0].board.id))
-                dispatch({type: 'EDIT_TASK_RESET'})
-            }
-
-            document.getElementById('edit-task-modal').style.display = 'none'
-
-        }
+    
     } 
 
-    const deleteTask = (id) => {
+    const handleDeleteSubtask = (id) => {
 
         if (window.confirm('Are you sure you want to delete this subtask?')) {
 
@@ -102,11 +90,12 @@ const EditTask = ( ) => {
         })
 
         dispatch(editTask(task.id, {
-            "title": taskTitle,
-            "description": taskDescription,
+            "title": taskTitle === 'default' ? task.title : taskTitle,
+            "description": taskDescription === 'default' ? task.description : taskDescription,
             "subtasks": changedSubtasks,
         }))
 
+        navigate(`/board/${id}/task/${taskID}`)
 
     } 
 
@@ -115,12 +104,10 @@ const EditTask = ( ) => {
         <div id='edit-task-modal' className='task-modal' onClick={(e) => hideModal(e)}>
             
             <div className="open-task-card mx-auto">
-            {taskLoading || editTaskLoading ? <Loader /> 
+            {taskLoading ? <Loader /> 
             : taskError ? <Message variant='danger'> No task data</Message>
             : (<>
                 <div>
-                    {editTaskError ? <Message variant='danger'>{editTaskError}</Message>
-                     : editTaskSuccess && <Message variant='success'>Task Saved!</Message>}
                      <h2 className="modal-task-title">Edit Task</h2>
                 </div>
 
@@ -128,13 +115,13 @@ const EditTask = ( ) => {
 
                     <div className='form-group'>
                         <label className='subtask-title' htmlFor="title">Title</label>
-                        <input type="text" value={taskTitle.length > 0 ? taskTitle : task.title}
+                        <input type="text" defaultValue={taskTitle === 'default' ? task.title : taskTitle}
                          onChange={(e) => setTaskTitle(e.target.value)}/>
                     </div>
 
                     <div className='form-group'>
                         <label className='subtask-title' htmlFor="description">Description</label>
-                        <textarea type="text" value={taskDescription.length > 0 ? taskDescription : task.description}
+                        <textarea type="text" defaultValue={taskDescription === 'default' ? task.description : taskDescription}
                             onChange={(e) => setTaskDescription(e.target.value)}
                             placeholder="e.g.  It's always good to take a break. This 15 
                             minute break will recharge the batteries a little."
@@ -147,12 +134,12 @@ const EditTask = ( ) => {
                         : deleteError || addSubtaskError ? <Message variant='danger'>
                             {deleteError ? deleteError : addSubtaskError && addSubtaskError}
                         </Message> 
-                        : (<div id='edit-subtasks-group'> 
+                        : (<div className='subtasks-container'> 
                             {subtasks.map(subtask => (
                                 <div key={subtask.id} className='subtask-input'>
                                     <input className='subtask-input-field' id={subtask.id}
                                      type="text" defaultValue={subtask.title} />
-                                    <svg onClick={() => deleteTask(subtask.id)} width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                                    <svg onClick={() => handleDeleteSubtask(subtask.id)} width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
                                 </div>
                             ))}
                           </div>)
@@ -164,7 +151,7 @@ const EditTask = ( ) => {
                     <p className="subtask-title mt-3">Status</p>
 
                     <div className='task-status'>
-                        <p>{success ? taskUpdate.status : error ? 'error' : task.status}</p>
+                        <p>{task.status}</p>
                     </div>
 
                     <input type='submit' onClick={(e) => handleSubmit(e)} className='btn-primary-s' value={'Save Changes'}/>

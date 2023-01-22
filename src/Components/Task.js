@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { updateTaskStatus, deleteTask, getTask } from '../actions/taskActions'
 import { listBoard } from '../actions/boardActions'
-import { updateTaskStatus } from '../actions/taskActions'
 import Message from '../Components/Message'
 import Loader from '../Components/Loader'
 
@@ -9,17 +10,38 @@ import Loader from '../Components/Loader'
 const Task = () => {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { id, taskID } = useParams()
 
     const [showActions, setShowActions] = useState(false)
-   
-    const boardList = useSelector(state => state.boardList)
-    const { board } = boardList
 
     const taskStatus = useSelector(state => state.taskStatus)
-    const { success, taskUpdate } = taskStatus
+    const { success, loading, error} = taskStatus
 
     const taskList = useSelector(state => state.taskList)
     const { loading:taskLoading, error:taskError, task, subtasks } = taskList
+
+    const editedTask = useSelector(state => state.editedTask)
+    const { success:editTaskSuccess } = editedTask
+
+
+    useEffect(() => {
+
+        if (success) {
+            dispatch(listBoard(id))
+            dispatch({type: 'TASK_STATUS_RESET'})
+
+        } else {
+            dispatch(getTask(taskID))
+        }
+
+        if (editTaskSuccess) {
+
+            dispatch(listBoard(id))
+            dispatch({type: 'EDIT_TASK_RESET'})
+        }
+        
+    }, [id, taskID, success, editTaskSuccess, dispatch])
 
 
     const showSettings = () => {
@@ -36,12 +58,9 @@ const Task = () => {
     const hideModal = (e) => {
         if (e.target.classList.contains('task-modal')) {
 
-            document.querySelector('.task-modal').style.display = 'none'
             setShowActions(false)
+            navigate(`/board/${id}`)
 
-            if (success) {
-                dispatch({type: 'TASK_STATUS_RESET'})
-            }
         }
     }
 
@@ -51,14 +70,17 @@ const Task = () => {
         
         document.getElementById(`subtask-title-${id}`).classList.toggle('subtask-done')
 
-        dispatch(listBoard(board[0].board.id))
-
     }
 
     const editTask = () => {
-        document.querySelector('.task-modal').style.display = 'none'
-        document.getElementById('edit-task-modal').style.display = 'block'
+        navigate(`/board/${id}/task/${taskID}/edit`)
         setShowActions(false)
+    }
+
+    const handleDeleteTask = () => {
+        if (window.confirm('Are you sure you want to delete this task?'))
+        dispatch(deleteTask(task.id))
+        navigate(`/board/${id}`)
     }
 
     return (
@@ -66,8 +88,8 @@ const Task = () => {
            
             <div className="open-task-card mx-auto">
 
-                {taskLoading ? <Loader/> 
-                : taskError ? <Message variant='danger'> No task data</Message>
+                {taskLoading || loading ? <Loader/> 
+                : taskError || error ? <Message variant='danger'> No task data</Message>
                 : (<>
                     <div className='d-flex justify-content-between align-items-center'>
                         <h2 className="modal-task-title">{task.title}</h2>
@@ -76,13 +98,14 @@ const Task = () => {
                         </div>
                         <div className={`modal-actions ${showActions ? 'd-block' : 'd-none'}`}>
                             <p onClick={editTask}>Edit Task</p>
-                            <p className="delete-task">Delete Task</p>
+                            <p onClick={handleDeleteTask} className="delete-task">Delete Task</p>
                         </div>
                     </div>
                     <p className="modal-task-description">{task.description}</p>
 
                     <p className="subtask-title">Subtasks ({subtasks.length})</p>
 
+                    <div className='subtasks-container'>
                     {subtasks.map(subtask => (
 
                         <div key={subtask.id} className='subtask'>
@@ -97,11 +120,11 @@ const Task = () => {
                         
                         </div>
                     ))}
-
+                    </div>
                     <p className="subtask-title mt-3">Current Status</p>
 
                     <div className='task-status'>
-                        <p>{success ? taskUpdate.status : task.status}</p>
+                        <p>{ task.status }</p>
                     </div>
 
                     </>) 

@@ -25,8 +25,95 @@ export const getTaskReducer = (state = { task: [], subtasks: [] }, action) => {
 }
 
 
+// Edit Task
+export const editTaskReducer = (state = { }, action) => {
+    switch(action.type) {
+        case 'EDIT_TASK_REQUEST':
+            return {
+                loading: true,
+            }
 
-// Update subtask and task status
+        case 'EDIT_TASK_SUCCESS':
+            return {
+                loading: false,
+                success: true,
+            }
+
+        case 'EDIT_TASK_FAIL':
+            return {
+                loading: false,
+                error: true,
+            }
+
+        case 'EDIT_TASK_RESET':
+            return { }
+
+        default:
+            return state
+    }
+}
+
+
+// Create task
+export const createTaskReducer = (state = { }, action) => {
+    switch(action.type) {
+        case 'CREATE_TASK_REQUEST':
+            return {
+                loading: true
+            }
+
+        case 'CREATE_TASK_SUCCESS':
+            return {
+                loading: false,
+                success: true,
+            }
+
+        case 'CREATE_TASK_ERROR':
+            return {
+                loading: false,
+                error: action.payload
+            }
+
+        case 'CREATE_TASK_RESET':
+            return { }
+
+        default:
+            return state
+    }
+} 
+
+
+// Delete task
+export const deleteTaskReducer = (state = { }, action) => {
+    switch(action.type) {
+        case 'DELETE_TASK_REQUEST':
+            return {
+                loading: true,
+            }
+
+        case 'DELETE_TASK_SUCCESS':
+            return {
+                loading: false,
+                success: true,
+            }
+
+        case 'DELETE_TASK_FAIL':
+            return {
+                loading: false,
+                error: true,
+            }
+
+        case 'DELETE_TASK_RESET':
+            return { }
+            
+
+        default:
+            return state
+    }
+}
+
+
+// Update task status
 export const updateTaskStatusReducer = (state = { taskUpdate: [], subtaskUpdate: []}, action) => {
     switch(action.type) {
         case 'TASK_STATUS_REQUEST':
@@ -49,7 +136,7 @@ export const updateTaskStatusReducer = (state = { taskUpdate: [], subtaskUpdate:
             }
         
         case 'TASK_STATUS_RESET':
-            return state = { }
+            return { }
 
 
         default:
@@ -79,7 +166,7 @@ export const addSubtaskReducer = (state = { }, action) => {
             }
         
         case 'ADD_SUBTASK_RESET':
-            return state = { }
+            return { }
 
 
         default:
@@ -109,9 +196,7 @@ export const deleteSubtaskReducer = (state = { }, action) => {
             }
 
         case 'DELETE_SUBTASK_RESET':
-            return {
-                state: { }
-            }
+            return { }
 
         default:
             return state
@@ -119,32 +204,3 @@ export const deleteSubtaskReducer = (state = { }, action) => {
 }
 
 
-// Edit Task
-export const editTaskReducer = (state = {  }, action) => {
-    switch(action.type) {
-        case 'EDIT_TASK_REQUEST':
-            return {
-                loading: true,
-            }
-
-        case 'EDIT_TASK_SUCCESS':
-            return {
-                loading: false,
-                success: true,
-            }
-
-        case 'EDIT_TASK_FAIL':
-            return {
-                loading: false,
-                error: true,
-            }
-
-        case 'EDIT_TASK_RESET':
-            return {
-                state: {}
-            }
-
-        default:
-            return state
-    }
-}

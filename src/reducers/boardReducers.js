@@ -53,4 +53,34 @@ export const boardListReducer = (state = { board: []} , action) => {
 
 
 
+// Create new Board
+export const createBoardReducer = (state = { } , action) => {
+    switch(action.type) {
+        case 'BOARD_CREATE_REQUEST':
+            return {
+                loading: true,
+            }
+
+        case 'BOARD_CREATE_SUCCESS':
+            return {
+                loading: false,
+                success: true,
+                board: action.payload,
+            }
+
+        case 'BOARD_CREATE_FAIL':
+            return {
+                loading: false,
+                error: action.payload
+            }
+
+        case 'BOARD_CREATE_RESET':
+            return { }
+
+        default: 
+            return state
+    }
+}
+
+
 

@@ -52,5 +52,30 @@ export const listBoard = (id) => async (dispatch) => {
 }
 
 
+export const createBoard = (board) => async (dispatch) => {
+
+    try {
+
+        dispatch({ type: 'BOARD_CREATE_REQUEST' })
+
+        const { data } = await axios.post(`/api/boards/create/`, board)
+
+        dispatch({
+            type: 'BOARD_CREATE_SUCCESS',
+            payload: data
+
+        })
+
+
+    } catch (error) {
+        dispatch({
+            type: 'BOARD_CREATE_FAIL',
+            payload: error.response && error.response.data.detail 
+            ? error.response.data.detail
+            : error.message
+        })
+    }
+}
+
 
 

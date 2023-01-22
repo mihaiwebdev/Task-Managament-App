@@ -1,7 +1,7 @@
 import { Row, Col, } from 'react-bootstrap'
+import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { listBoard } from '../actions/boardActions'
+import { useSelector } from 'react-redux'
 import Message from '../Components/Message'
 import Loader from '../Components/Loader'
 import SetTheme from '../Components/SetTheme'
@@ -9,7 +9,8 @@ import SetTheme from '../Components/SetTheme'
 
 const Sidebar = () => {
 
-    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { id } = useParams()
 
     const [hideBar, setHideBar] = useState(false)
 
@@ -20,12 +21,12 @@ const Sidebar = () => {
     useEffect(() => {
 
         if (hideBar === true) {
-            document.querySelector('.sidebar').classList.add('hide')
+
             document.querySelector('.show-sidebar').classList.add('active')
             document.querySelector('.navbar-brand').classList.remove('extended')
 
         } else if (hideBar === false) {
-            document.querySelector('.sidebar').classList.remove('hide')
+
             document.querySelector('.show-sidebar').classList.remove('active')
             document.querySelector('.navbar-brand').classList.add('extended')
         }
@@ -33,18 +34,16 @@ const Sidebar = () => {
     }, [hideBar])
     
     
-    const setActive = (id) => {
-        document.querySelectorAll('.boards-tasks').forEach(board => board.className = 'boards-tasks')
-        document.getElementById(`taskName-${id}`).classList.add('board-task-active')
+    const setActive = (boardID) => {
         
-        dispatch(listBoard(id))
+        navigate(`/board/${boardID}`)
 
     }
     
     
     return (
         <>
-            <div className="sidebar">
+            <div className={hideBar ? 'sidebar hide' : 'sidebar'}>
 
                 {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message>
                  : (
@@ -54,13 +53,15 @@ const Sidebar = () => {
 
                         {boards.map((board) => (
 
-                            <Col key={board.id} id={`taskName-${board.id}`} sm={12} onClick={() => setActive(board.id)} className='boards-tasks'>
+                            <Col key={board.id} id={`boardName-${board.id}`} sm={12} onClick={() => setActive(board.id)}
+                             className={id === board.id.toString() ? 'boards-tasks board-task-active' : 'boards-tasks'}>
                                 <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z"/></svg>
                                 <p>{board.name}</p> 
                             </Col>
                         ))}
 
-                        <Col sm={12} className='boards-tasks create-board'>
+                        <Col sm={12} className='boards-tasks create-board' 
+                            onClick={() => navigate(`/board/create`)}>
                                 <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z"/></svg>
                                 <p>+ Create New Board</p> 
                             </Col>
