@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { updateTaskStatus, deleteTask, getTask } from '../actions/taskActions'
+import { updateTaskStatus, getTask } from '../actions/taskActions'
 import { listBoard } from '../actions/boardActions'
 import Message from '../Components/Message'
 import Loader from '../Components/Loader'
@@ -78,9 +78,8 @@ const Task = () => {
     }
 
     const handleDeleteTask = () => {
-        if (window.confirm('Are you sure you want to delete this task?'))
-        dispatch(deleteTask(task.id))
-        navigate(`/board/${id}`)
+
+        navigate(`/board/${id}/task/${taskID}/delete`)
     }
 
     return (

@@ -67,7 +67,6 @@ const Board = () => {
         navigate(`/board/${id}/task/${taskID}`)
 
     }
-
     
     return (
         <>
@@ -93,7 +92,9 @@ const Board = () => {
                                     : col.name.toLowerCase() === 'done' ? (<div className='dot green-dot'></div>)
                                     : (<div className='dot'></div>)    
                                     }
-                                    <h2 className='col-title ms-2'>{col.name.toUpperCase()}</h2>
+                                    <h2 className='col-title ms-2'>{col.name.toUpperCase()} 
+                                         ({board[2].tasks.filter(task => task.column === col.id).length})
+                                    </h2>
                                 </div>
                                 
                                 {tasksWithSubtasks[0].map(task => 

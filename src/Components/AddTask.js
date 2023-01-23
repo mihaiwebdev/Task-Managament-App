@@ -116,7 +116,7 @@ const AddTask = ( ) => {
                               ))
                             }
                         </div>
-                        <button className='btn-secondary' onClick={(e) => addNewSubtask(e)} >+ Add New Subtask</button>
+                        <button className='btn-secondary add-subtask' onClick={(e) => addNewSubtask(e)} >+ Add New Subtask</button>
                     </div>
                     
                     <p className="subtask-title mt-3">Status</p>

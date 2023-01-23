@@ -145,7 +145,7 @@ const EditTask = ( ) => {
                           </div>)
                         }
                         
-                        <button className='btn-secondary' onClick={handleAddSubtask}>+ Add New Subtask</button>
+                        <button className='btn-secondary add-subtask' onClick={handleAddSubtask}>+ Add New Subtask</button>
                     </div>
                     
                     <p className="subtask-title mt-3">Status</p>

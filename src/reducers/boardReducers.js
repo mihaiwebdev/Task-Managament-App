@@ -46,11 +46,13 @@ export const boardListReducer = (state = { board: []} , action) => {
                 error: action.payload
             }
 
+        case 'BOARD_LIST_RESET':
+            return  { board : [] }
+            
         default: 
             return state
     }
 }
-
 
 
 // Create new Board
@@ -83,4 +85,60 @@ export const createBoardReducer = (state = { } , action) => {
 }
 
 
+// Delete board
+export const editBoardReducer = (state = { }, action) => {
+    switch(action.type) {
+        case 'EDIT_BOARD_REQUEST':
+            return {
+                loading: true
+            }
 
+        case 'EDIT_BOARD_SUCCESS':
+            return {
+                loading: false,
+                board: action.payload,
+                success: true,
+            }
+            
+        case 'EDIT_BOARD_FAIL':
+            return {
+                loading: false,
+                error: action.payload
+        }
+
+        case 'EDIT_BOARD_RESET':
+            return { }
+
+        default:
+            return state
+    }
+}
+
+
+// Delete board
+export const deleteBoardReducer = (state = { }, action) => {
+    switch(action.type) {
+        case 'DELETE_BOARD_REQUEST':
+            return {
+                loading: true
+            }
+
+        case 'DELETE_BOARD_SUCCESS':
+            return {
+                loading: false,
+                success: true,
+            }
+            
+        case 'DELETE_BOARD_FAIL':
+            return {
+                loading: false,
+                error: action.payload
+        }
+
+        case 'DELETE_BOARD_RESET':
+            return { }
+
+        default:
+            return state
+    }
+}
