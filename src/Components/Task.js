@@ -88,7 +88,9 @@ const Task = () => {
             <div className="open-task-card mx-auto">
 
                 {taskLoading || loading ? <Loader/> 
-                : taskError || error ? <Message variant='danger'> No task data</Message>
+                : taskError || error ? <Message variant='danger'>{
+                    error ? error : taskError && taskError
+                }</Message>
                 : (<>
                     <div className='d-flex justify-content-between align-items-center'>
                         <h2 className="modal-task-title">{task.title}</h2>

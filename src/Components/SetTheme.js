@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react'
 
-const SetTheme = () => {
+const SetTheme = ({ screen }) => {
 
     const [theme, setTheme] = useState('light')
 
     useEffect(() => {
+        
+        if (localStorage.getItem('theme')) {
 
-        setTheme(localStorage.getItem('theme'))
+            setTheme(localStorage.getItem('theme'))
+        }
 
         if (theme === 'light') {
-            
-            document.querySelector('.ball').style.transform = 'translateX(0)';
+            document.querySelector(`#ball-${screen}`).style.transform = 'translateX(0px)'
             document.documentElement.style.setProperty('--theme-body', 'var(--white-gray)') 
             document.documentElement.style.setProperty('--theme-navbar', 'var(--white)') 
             document.documentElement.style.setProperty('--theme-borders', 'var(--light-gray)') 
@@ -19,8 +21,7 @@ const SetTheme = () => {
             document.getElementById('logo').setAttribute("fill", "#000112")
 
         } else if (theme === 'dark') {
-
-            document.querySelector('.ball').style.transform = 'translateX(20px)';
+            document.querySelector(`#ball-${screen}`).style.transform = 'translateX(20px)'
             document.documentElement.style.setProperty('--theme-body', 'var(--light-dark)') 
             document.documentElement.style.setProperty('--theme-navbar', 'var(--dark-gray)')
             document.documentElement.style.setProperty('--theme-borders', 'var(--dark-gray-light)')  
@@ -30,17 +31,18 @@ const SetTheme = () => {
         }
 
 
-    }, [theme])
-
-
+    }, [theme, screen])
+    
     const handleTheme = () => {
-
+        
         if (theme === 'light') {
             setTheme('dark')
+            
             localStorage.setItem('theme', 'dark')
-
+        
         } else if (theme === 'dark') {
             setTheme('light')
+            
             localStorage.setItem('theme', 'light')
         }
 
@@ -53,7 +55,7 @@ const SetTheme = () => {
             <div>
                 <input type="checkbox" className="checkbox" id="checkbox" />
                 <label htmlFor="checkbox" className="label" onClick={handleTheme}>
-                    <div className='ball'></div>
+                    <div id={`ball-${screen}`} className='ball'></div>
                 </label>
             </div>
 

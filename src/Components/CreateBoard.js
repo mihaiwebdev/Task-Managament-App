@@ -67,7 +67,7 @@ const CreateBoard = ( ) => {
 
                         <div className='form-group'>
                             <label className='subtask-title' htmlFor="title">Name</label>
-                            <input type="text" value={ boardTitle } placeholder='e.g. Web Design'
+                            <input type="text" required value={ boardTitle } placeholder='e.g. Web Design'
                             onChange={(e) => setBoardTitle(e.target.value)}/>
                         </div>
 

@@ -10,7 +10,7 @@ const Header = () => {
     const navigate = useNavigate()
 
     const [showActions, setShowActions] = useState(false)
-    const [showMobileMenu, setShowMobileMenu] = useState(false)
+    const [showMobileMenu, setShowMobileMenu] = useState(true)
 
     const boardList = useSelector(state => state.boardList)
     const { board } = boardList
@@ -71,10 +71,10 @@ const Header = () => {
                     <svg id='mobile-logo' width="24" height="25" xmlns="http://www.w3.org/2000/svg"><g fill="#635FC7" fillRule="evenodd"><rect width="6" height="25" rx="2"/><rect opacity=".75" x="9" width="6" height="25" rx="2"/><rect opacity=".5" x="18" width="6" height="25" rx="2"/></g></svg>
                 </Navbar.Brand>
         
-                <h3 className='task-title'>{ board.length > 0 ? board[0].board.name : ('')}</h3>
+                <h3 className='task-title'>{ board && board.length > 0 ? board[0].board.name : ('')}</h3>
 
                 <div onClick={() => showMenu()} className='mobile-nav'>
-                    <h3 className='task-title'>{ board.length > 0 ? board[0].board.name : ('Select a board')}</h3>
+                    <h3 className='task-title'>{ board && board.length > 0 ? board[0].board.name : ('Select a board')}</h3>
                     <svg className='mt-2 ms-2' width="10" height="7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="m1 1 4 4 4-4"/></svg>
                 </div>
 

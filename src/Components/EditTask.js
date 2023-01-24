@@ -105,7 +105,7 @@ const EditTask = ( ) => {
             
             <div className="open-task-card mx-auto">
             {taskLoading ? <Loader /> 
-            : taskError ? <Message variant='danger'> No task data</Message>
+            : taskError? <Message variant='danger'>{taskError}</Message>
             : (<>
                 <div>
                      <h2 className="modal-task-title">Edit Task</h2>

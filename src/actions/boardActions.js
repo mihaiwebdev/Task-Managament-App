@@ -1,14 +1,23 @@
 import axios from 'axios'
 
 
-export const listAllBoards = () => async(dispatch) => {
+export const listAllBoards = () => async(dispatch, getState) => {
 
     try {  
         dispatch({
             type: 'BOARD_LIST_ALL_REQUEST'
         })
 
-        const { data } = await axios.get('/api/boards/')
+        const { userLogin: { userInfo } } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const { data } = await axios.get('/api/boards/', config)
 
         dispatch({
             type: 'BOARD_LIST_ALL_SUCCESS',
@@ -18,8 +27,8 @@ export const listAllBoards = () => async(dispatch) => {
     } catch (error) {
         dispatch({
             type: 'BOARD_LIST_ALL_FAIL',
-            payload: error.reseponse && error.reseponse.data.detail
-            ? error.reseponse.data.detail
+            payload: error.response && error.response.data.detail
+            ? error.response.data.detail
             : error.message
         })
         
@@ -27,13 +36,22 @@ export const listAllBoards = () => async(dispatch) => {
 }
 
 
-export const listBoard = (id) => async (dispatch) => {
+export const listBoard = (id) => async (dispatch, getState) => {
 
     try {
 
         dispatch({ type: 'BOARD_LIST_REQUEST' })
 
-        const { data } = await axios.get(`/api/boards/${id}/`)
+        const { userLogin: { userInfo } } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const { data } = await axios.get(`/api/boards/${id}/`, config)
 
         dispatch({
             type: 'BOARD_LIST_SUCCESS',
@@ -52,13 +70,22 @@ export const listBoard = (id) => async (dispatch) => {
 }
 
 
-export const createBoard = (board) => async (dispatch) => {
+export const createBoard = (board) => async (dispatch, getState) => {
 
     try {
 
         dispatch({ type: 'BOARD_CREATE_REQUEST' })
 
-        const { data } = await axios.post(`/api/boards/create/`, board)
+        const { userLogin: { userInfo } } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const { data } = await axios.post(`/api/boards/create/`, board, config)
 
         dispatch({
             type: 'BOARD_CREATE_SUCCESS',
@@ -78,12 +105,24 @@ export const createBoard = (board) => async (dispatch) => {
 }
 
 
-export const editBoard = (id, boardChange) => async (dispatch) => {
+export const editBoard = (id, boardChange) => async (dispatch, getState) => {
     try {
 
         dispatch({type: 'EDIT_BOARD_REQUEST'})
 
-        const { data } = await axios.put(`/api/boards/${id}/edit/`, {"title": boardChange})
+        const { userLogin: { userInfo } } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const { data } = await axios.put(`/api/boards/${id}/edit/`,
+            {"title": boardChange},
+            config
+         )
 
         dispatch({
             type: 'EDIT_BOARD_SUCCESS',
@@ -102,12 +141,21 @@ export const editBoard = (id, boardChange) => async (dispatch) => {
 }
 
 
-export const deleteBoard = (id) => async (dispatch) => {
+export const deleteBoard = (id) => async (dispatch, getState) => {
     try {
 
         dispatch({type: 'DELETE_BOARD_REQUEST'})
 
-        await axios.delete(`/api/boards/${id}/delete/`)
+        const { userLogin: { userInfo } } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        await axios.delete(`/api/boards/${id}/delete/`, config)
 
         dispatch({type: 'DELETE_BOARD_SUCCESS'})
 

@@ -55,8 +55,17 @@ option {
   color: var(--theme-text);
 }
 
+a {
+  text-decoration: none !important;
+  color: var(--purple) !important;
+}
+
+a:hover {
+  opacity: 0.9;
+}
+
 .alert-message {
-  height: auto;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -904,7 +913,7 @@ option {
     max-width: 264px;
     min-height: auto;
     height: auto;
-    max-height: 350px;
+    max-height: 370px;
     overflow-y: auto;
     overflow-x: hidden;
     animation: none;

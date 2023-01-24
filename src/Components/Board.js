@@ -38,7 +38,7 @@ const Board = () => {
     }, [id, createSuccess, deleteTaskSuccess, dispatch])
     
 
-    if (board.length > 0) {
+    if (board && board.length > 0) {
             
         const newTaskObj = board[2].tasks.map(task => {
 

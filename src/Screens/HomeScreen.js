@@ -23,10 +23,14 @@ const HomeScreen = () => {
     const editedBoard = useSelector(state => state.editedBoard)
     const { success: editSuccess, board} = editedBoard
 
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
 
     useEffect(() => {
-        
-        dispatch(listAllBoards())
+        if (userInfo && userInfo.id) {
+
+            dispatch(listAllBoards())
+        }
 
         if (success) {
             dispatch({type: 'DELETE_BOARD_RESET'})
@@ -43,7 +47,7 @@ const HomeScreen = () => {
         }
 
 
-    }, [dispatch, success, editSuccess, createdSuccess, board])
+    }, [dispatch, userInfo, success, editSuccess, createdSuccess, board])
     
 
     return (

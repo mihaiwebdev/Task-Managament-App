@@ -16,9 +16,12 @@ export const getTaskReducer = (state = { task: [], subtasks: [] }, action) => {
         case 'GET_TASK_FAIL':
             return {
                 loading: false,
-                error: true,
+                error: action.payload,
             }
 
+        case 'GET_TASK_RESET':
+            return { task: [], subtasks: [] }
+            
         default:
             return state
     }
@@ -136,7 +139,7 @@ export const updateTaskStatusReducer = (state = { taskUpdate: [], subtaskUpdate:
             }
         
         case 'TASK_STATUS_RESET':
-            return { }
+            return { taskUpdate: [], subtaskUpdate: [] }
 
 
         default:

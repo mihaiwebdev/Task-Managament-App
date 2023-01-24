@@ -1,5 +1,5 @@
 // Get all boards
-export const boardListAllReducer = (state = { boards: [] }, action) => {
+export const boardListAllReducer = (state = {  }, action) => {
     switch(action.type) {
         case 'BOARD_LIST_ALL_REQUEST':
             return {
@@ -19,6 +19,9 @@ export const boardListAllReducer = (state = { boards: [] }, action) => {
                 error: action.payload
             }
 
+        case 'BOARD_LIST_ALL_RESET':
+            return { }
+            
         default:
             return state
     }

@@ -7,6 +7,8 @@ import Task from './Components/Task';
 import EditTask from './Components/EditTask';
 import AddTask from './Components/AddTask';
 import EditBoardModal from './Components/EditBoardModal';
+import LoginModal from './Components/LoginModal';
+import RegisterModal from './Components/RegisterModal';
 
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
 
       <Routes>
         <Route path='/' element={ <HomeScreen /> }>
+          <Route path='/login' element={ <LoginModal />} />
+          <Route path='/register' element={ <RegisterModal />} />
 
           <Route path='board/:id' element={ <Board />} >
             <Route path='delete' element={ <DeleteConfirm /> }/>
