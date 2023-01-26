@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { loginUser } from '../actions/userActions'
 import Message from '../Components/Message'
-import Loader from '../Components/Loader'
+import Spinner from '../Components/Spinner'
 
 const LoginModal = ( ) => {
 
@@ -25,13 +25,6 @@ const LoginModal = ( ) => {
     }, [navigate, userInfo])
 
 
-    const hideModal = (e) => {
-
-        if (e.target.classList.contains('task-modal')) {
-            navigate('/')
-            }
-    }
-
     const handleSubmit = (e) => {
         e.preventDefault()
 
@@ -39,11 +32,11 @@ const LoginModal = ( ) => {
     }
 
     return (
-        <div id='edit-task-modal' className='task-modal' onClick={(e) => hideModal(e)}>
+        <div id='edit-task-modal' className='task-modal'>
             
             <div className="open-task-card mx-auto">
                 
-                {loading ? < Loader /> : error && <Message variant='danger'>{error}</Message>}
+                {loading ? < Spinner /> : error && <Message variant='danger'>{error}</Message>}
 
                 <div>
                     <h2 className="modal-task-title">Log In</h2>

@@ -86,10 +86,11 @@ export const createTask = (task) => async (dispatch, getState) => {
             }
         }
 
-        await axios.post(`/api/task/create/`, task, config)
+        const { data } = await axios.post(`/api/task/create/`, task, config)
 
         dispatch({ 
             type: 'CREATE_TASK_SUCCESS',
+            payload: data
         })
 
 
@@ -139,7 +140,7 @@ export const deleteTask = (id) => async (dispatch, getState) => {
 
 
 // Update subtask status
-export const updateTaskStatus = (id, isCompleted, taskID) => async (dispatch, getState) => {
+export const updateTaskStatus = (subtasks, status, taskID) => async (dispatch, getState) => {
 
     try {
 
@@ -152,11 +153,13 @@ export const updateTaskStatus = (id, isCompleted, taskID) => async (dispatch, ge
                 Authorization: `Bearer ${userInfo.token}`
             }
         }
+
+
         const { data } = await axios.put(
             `/api/task/status/`,
-            {'id': id,
-            'isCompleted': isCompleted,
-            'taskID': taskID },
+            {'taskID': taskID,
+             'subtasks': subtasks,
+             'status': status },
             config
         )
 
@@ -176,55 +179,6 @@ export const updateTaskStatus = (id, isCompleted, taskID) => async (dispatch, ge
     }
 }
 
-
-// Add new subtask
-export const createSubtask = (subtask) => async (dispatch) => {
-
-    try {
-        
-        dispatch({ type: 'ADD_SUBTASK_REQUEST'})
-
-        await axios.post(`/api/task/subtask/create/`, subtask)
-
-        dispatch({ 
-            type: 'ADD_SUBTASK_SUCCESS',
-        })
-
-
-    } catch (error) {
-        dispatch({
-            type: 'ADD_SUBTASK_FAIL',
-            payload: error.response && error.response.data.detail 
-            ? error.response.data.detail
-            : error.message
-        })
-    }
-}
-
-
-// Delete subtask
-export const deleteSubtask = (id) => async (dispatch) => {
-
-    try {
-        
-        dispatch({ type: 'DELETE_SUBTASK_REQUEST'})
-
-        await axios.delete(`/api/task/subtask/delete/${id}`)
-
-        dispatch({ 
-            type: 'DELETE_SUBTASK_SUCCESS',
-        })
-
-
-    } catch (error) {
-        dispatch({
-            type: 'DELETE_SUBTASK_FAIL',
-            payload: error.response && error.response.data.detail 
-            ? error.response.data.detail
-            : error.message
-        })
-    }
-}
 
 
 

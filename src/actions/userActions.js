@@ -46,6 +46,8 @@ export const logout = () => (dispatch) => {
 
     dispatch({type: 'BOARD_LIST_RESET'})
 
+    dispatch({type: 'EDIT_BOARD_RESET'})
+
     dispatch({type: 'GET_TASK_RESET'})
 
     dispatch({type: 'TASK_STATUS_RESET'})

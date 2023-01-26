@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { registerUser } from '../actions/userActions'
 import Message from '../Components/Message'
-import Loader from '../Components/Loader'
+import Spinner from '../Components/Spinner'
 
 const RegisterModal = ( ) => {
 
@@ -21,19 +21,12 @@ const RegisterModal = ( ) => {
 
     useEffect(() => {
 
-        if (userInfo) {
+        if (userInfo && userInfo.id) {
             navigate('/')
             window.location.reload()
         }
 
     }, [userInfo, navigate])
-
-    const hideModal = (e) => {
-        if (e.target.classList.contains('task-modal')) {
-            navigate('/')
-            }
-    }
-
   
     const handleSubmit = (e) =>  {
         e.preventDefault()
@@ -52,12 +45,12 @@ const RegisterModal = ( ) => {
     }
 
     return (
-        <div id='edit-task-modal' className='task-modal' onClick={(e) => hideModal(e)}>
+        <div id='edit-task-modal' className='task-modal'>
             
             <div className="open-task-card mx-auto">
                 {error ? <Message variant='danger'>{error}</Message>
                  : message && <Message variant='danger'>{message}</Message>}
-                {loading && <Loader />}
+                {loading && <Spinner />}
 
                 <div>
                     <h2 className="modal-task-title">Register</h2>

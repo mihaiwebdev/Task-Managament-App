@@ -4,8 +4,8 @@ import thunk from 'redux-thunk'
 import { userLoginReducer, userRegisterReducer } from './reducers/userReducers'
 import { boardListReducer, boardListAllReducer, createBoardReducer
         , deleteBoardReducer, editBoardReducer} from './reducers/boardReducers'
-import { updateTaskStatusReducer, deleteSubtaskReducer, getTaskReducer, createTaskReducer,
-        addSubtaskReducer, editTaskReducer, deleteTaskReducer } from './reducers/taskReducers'
+import { updateTaskStatusReducer, getTaskReducer, createTaskReducer,
+         editTaskReducer, deleteTaskReducer } from './reducers/taskReducers'
 
 const reducer = combineReducers({
     userLogin: userLoginReducer,
@@ -20,9 +20,6 @@ const reducer = combineReducers({
     taskStatus: updateTaskStatusReducer,
     deletedTask: deleteTaskReducer,
     createdTask: createTaskReducer,
-
-    addSubtask: addSubtaskReducer,
-    deletedSubtask: deleteSubtaskReducer,
     editedTask: editTaskReducer,
     
 })

@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createTask } from '../actions/taskActions'
 import Message from '../Components/Message'
-
+import Spinner from '../Components/Spinner'
 
 
 const AddTask = ( ) => {
@@ -17,9 +17,22 @@ const AddTask = ( ) => {
     const [message, setMessage] = useState('')
     const [subtasks, setSubtasks] = useState(['subtask', 'subtask'])
 
+
+    const createdTask = useSelector(state => state.createdTask)
+    const { error:createError, loading:createLoading, success:createSuccess } = createdTask
+
+    useEffect(() => {
+
+        if (createSuccess) {
+            navigate(`/board/${id}/`)
+        }
+
+    }, [navigate, id, createSuccess])
+
+
     const hideModal = (e) => {
         
-        if (e.target.classList.contains('task-modal')) {
+        if (e.target.classList.contains('task-modal') && !createLoading) {
         navigate(`/board/${id}`)
         }
 
@@ -45,7 +58,7 @@ const AddTask = ( ) => {
         let subtasksTitle = []
 
         if (taskTitle.length > 1) {
-   
+            setMessage('')
             const subtasksInputs = document.querySelectorAll('.subtask-input-field')
             
             subtasksInputs.forEach(input => {
@@ -66,8 +79,6 @@ const AddTask = ( ) => {
                 "status": status,
             }))
             
-            navigate(`/board/${id}/`)
-
         } else {
             setMessage('Please enter a task title')
 
@@ -80,58 +91,60 @@ const AddTask = ( ) => {
         <div id='edit-task-modal' className='task-modal' onClick={(e) => hideModal(e)}>
             
             <div className="open-task-card mx-auto">
-                {message && <Message variant='danger'>{message}</Message>}
+            {message && <Message variant='danger'>{message}</Message>}
                 <div>
-                     <h2 className="modal-task-title">Add New Task</h2>
+                    <h2 className="modal-task-title">Add New Task</h2>
                 </div>
+                { createLoading ? <Spinner/> : createError ? <Message variant='danger'> {createError}</Message>
+                : (<>
+                
+                    <form id='edit-task'>
 
-                <form id='edit-task'>
-
-                    <div className='form-group'>
-                        <label className='subtask-title' htmlFor="title">Title</label>
-                        <input type="text" value={ taskTitle } placeholder='e.g. Take coffe break'
-                         onChange={(e) => setTaskTitle(e.target.value)}/>
-                    </div>
-
-                    <div className='form-group'>
-                        <label className='subtask-title' htmlFor="description">Description</label>
-                        <textarea type="text" value={ taskDescription }
-                            onChange={(e) => setTaskDescription(e.target.value)}
-                            placeholder="e.g.  It's always good to take a break. This 15 
-                            minute break will recharge the batteries a little."
-                            />
-                    </div>
-
-                    <div className='form-group'>
-                        <label className='subtask-title' htmlFor="subtasks">Subtasks</label>
-                        
-                        <div className='subtasks-container'> 
-                          {subtasks.map((subtask, idx) => (
-                                <div key={idx} className='subtask-input'>
-                                    <input className='subtask-input-field'
-                                     type="text" id={idx} />
-                                    <svg onClick={() => deleteSubtask(idx)} width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
-                                </div>
-                        
-                              ))
-                            }
+                        <div className='form-group'>
+                            <label className='subtask-title' htmlFor="title">Title</label>
+                            <input type="text" value={ taskTitle } placeholder='e.g. Take coffe break'
+                            onChange={(e) => setTaskTitle(e.target.value)}/>
                         </div>
-                        <button className='btn-secondary add-subtask' onClick={(e) => addNewSubtask(e)} >+ Add New Subtask</button>
-                    </div>
-                    
-                    <p className="subtask-title mt-3">Status</p>
 
-                    <select id='select-status' className='task-status'>
-                        <option value="Todo">Todo</option>
-                        <option value="Doing">Doing</option>
-                        <option value="Done">Done</option>
-                    </select>
+                        <div className='form-group'>
+                            <label className='subtask-title' htmlFor="description">Description</label>
+                            <textarea type="text" value={ taskDescription }
+                                onChange={(e) => setTaskDescription(e.target.value)}
+                                placeholder="e.g.  It's always good to take a break. This 15 
+                                minute break will recharge the batteries a little."
+                                />
+                        </div>
 
-                    <input type='submit' onClick={(e) => handleSubmit(e)} 
-                     className='btn-primary-s' value={'Create Task'}/>
+                        <div className='form-group'>
+                            <label className='subtask-title' htmlFor="subtasks">Subtasks</label>
+                            
+                            <div className='subtasks-container'> 
+                            {subtasks.map((subtask, idx) => (
+                                    <div key={idx} className='subtask-input'>
+                                        <input className='subtask-input-field'
+                                        type="text" id={idx} />
+                                        <svg onClick={() => deleteSubtask(idx)} width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                                    </div>
+                            
+                                ))
+                                }
+                            </div>
+                            <button className='btn-secondary add-subtask' onClick={(e) => addNewSubtask(e)} >+ Add New Subtask</button>
+                        </div>
+                        
+                        <p className="subtask-title mt-3">Status</p>
+
+                        <select id='select-status' className='task-status'>
+                            <option value="Todo">Todo</option>
+                            <option value="Doing">Doing</option>
+                            <option value="Done">Done</option>
+                        </select>
+
+                        <input type='submit' onClick={(e) => handleSubmit(e)} 
+                        className='btn-primary-s' value={'Create Task'}/>
                 </form>
 
-              
+                </>)}
 
             </div>
 

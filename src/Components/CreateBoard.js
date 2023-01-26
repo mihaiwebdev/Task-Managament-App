@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { createBoard } from '../actions/boardActions'
 import Message from '../Components/Message'
-import Loader from '../Components/Loader'
-
+import Spinner from '../Components/Spinner'
 
 
 const CreateBoard = ( ) => {
@@ -22,7 +21,7 @@ const CreateBoard = ( ) => {
     useEffect(() => {
 
         if (success) {
-            dispatch({type: 'CREATE_BOARD_RESET'})
+           
             navigate(`/board/${board.id}`)
         }
 
@@ -31,7 +30,7 @@ const CreateBoard = ( ) => {
 
     const hideModal = (e) => {
         
-        if (e.target.classList.contains('task-modal')) {
+        if (e.target.classList.contains('task-modal') && !loading) {
         navigate(`/`)
         }
 
@@ -61,7 +60,7 @@ const CreateBoard = ( ) => {
                 <div>
                      <h2 className="modal-task-title">Add New Board</h2>
                 </div>
-                {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message>
+                {loading ? <Spinner /> : error ? <Message variant='danger'>{error}</Message>
                  : ( 
                     <form id='edit-task'>
 

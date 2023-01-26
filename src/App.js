@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import HomeScreen from './Screens/HomeScreen'
 import CreateBoard from './Components/CreateBoard';
 import DeleteConfirm from './Components/DeleteConfirm';

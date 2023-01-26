@@ -69,9 +69,10 @@ export const createTaskReducer = (state = { }, action) => {
             return {
                 loading: false,
                 success: true,
+                newTask: action.payload,
             }
 
-        case 'CREATE_TASK_ERROR':
+        case 'CREATE_TASK_FAIL':
             return {
                 loading: false,
                 error: action.payload
@@ -117,7 +118,7 @@ export const deleteTaskReducer = (state = { }, action) => {
 
 
 // Update task status
-export const updateTaskStatusReducer = (state = { taskUpdate: [], subtaskUpdate: []}, action) => {
+export const updateTaskStatusReducer = (state = {  }, action) => {
     switch(action.type) {
         case 'TASK_STATUS_REQUEST':
             return {
@@ -128,8 +129,7 @@ export const updateTaskStatusReducer = (state = { taskUpdate: [], subtaskUpdate:
             return {
                 loading: false,
                 success:true,
-                taskUpdate: action.payload.task,
-                subtaskUpdate: action.payload.subtask
+
             }
 
         case 'TASK_STATUS_FAIL':
@@ -139,71 +139,11 @@ export const updateTaskStatusReducer = (state = { taskUpdate: [], subtaskUpdate:
             }
         
         case 'TASK_STATUS_RESET':
-            return { taskUpdate: [], subtaskUpdate: [] }
+            return {  }
 
 
         default:
             return state
     }
 }
-
-
-// Add new subtask
-export const addSubtaskReducer = (state = { }, action) => {
-    switch(action.type) {
-        case 'ADD_SUBTASK_REQUEST':
-            return {
-                loading: true,
-            }
-
-        case 'ADD_SUBTASK_SUCCESS':
-            return {
-                loading: false,
-                success:true,
-            }
-
-        case 'ADD_SUBTASK_FAIL':
-            return {
-                loading: false,
-                error: action.payload
-            }
-        
-        case 'ADD_SUBTASK_RESET':
-            return { }
-
-
-        default:
-            return state
-    }
-}
-
-
-// Delete subtask
-export const deleteSubtaskReducer = (state = { }, action) => {
-    switch(action.type) {
-        case 'DELETE_SUBTASK_REQUEST':
-            return {
-                loading: true,
-            }
-
-        case 'DELETE_SUBTASK_SUCCESS':
-            return {
-                loading: false,
-                success: true,
-            }
-
-        case 'DELETE_SUBTASK_FAIL':
-            return {
-                loading: false,
-                error: true,
-            }
-
-        case 'DELETE_SUBTASK_RESET':
-            return { }
-
-        default:
-            return state
-    }
-}
-
 

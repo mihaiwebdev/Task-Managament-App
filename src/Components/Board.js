@@ -2,8 +2,9 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Outlet, useNavigate } from 'react-router-dom'
 import { listBoard } from '../actions/boardActions'
-import Loader from '../Components/Loader'
+import { motion } from 'framer-motion'
 import Message from '../Components/Message'
+import Spinner from '../Components/Spinner'
 
 const Board = () => {
 
@@ -15,11 +16,16 @@ const Board = () => {
     const { error, loading, board } = boardList
 
     const createdTask = useSelector(state => state.createdTask)
-    const { error:createError, loading:createLoading, success:createSuccess } = createdTask
+    const {  success:createSuccess } = createdTask
 
     const deletedTask = useSelector(state => state.deletedTask)
-    const { loading:deleteLoading, error:deleteError, success:deleteTaskSuccess } = deletedTask
+    const { success:deleteTaskSuccess } = deletedTask
 
+    const taskStatus = useSelector(state => state.taskStatus)
+    const { success: statusSuccess } = taskStatus
+
+    const editedTask = useSelector(state => state.editedTask)
+    const { success: editSuccess } = editedTask
 
     let tasksWithSubtasks = []
 
@@ -27,15 +33,24 @@ const Board = () => {
         
         dispatch(listBoard(id))
 
+        if (statusSuccess) {
+            dispatch({type: 'TASK_STATUS_RESET'})
+        }
+
         if (deleteTaskSuccess) {
-            dispatch({type: 'TASK_DELETE_RESET'})
+            dispatch({type: 'DELETE_TASK_RESET'})
         }
 
         if (createSuccess) {
-            dispatch({type: 'TASK_CREATE_RESET'})
+            dispatch({type: 'CREATE_TASK_RESET'})
         }
 
-    }, [id, createSuccess, deleteTaskSuccess, dispatch])
+        if (editSuccess) {
+            dispatch({type: 'EDIT_TASK_RESET'})
+        }
+
+    }, [id, statusSuccess, createSuccess, editSuccess,
+         deleteTaskSuccess, dispatch])
     
 
     if (board && board.length > 0) {
@@ -61,7 +76,6 @@ const Board = () => {
         tasksWithSubtasks.push(newTaskObj)
     } 
 
-
     const showTaskModal = (taskID) => {
 
         navigate(`/board/${id}/task/${taskID}`)
@@ -70,10 +84,11 @@ const Board = () => {
     
     return (
         <>
-            {loading || deleteLoading || createLoading ? <Loader /> 
-             : error || deleteError || createError 
-             ? <Message variant='danger'>{error}</Message> : board.length > 0
-             && ( <div className='tasks-layout'>
+           
+            <div className='tasks-layout'>
+                {loading ? <Spinner /> : error ? <Message variant='danger'>{error}</Message>
+                    : board.length > 0 && (
+                    <>
                     {board[2].tasks.length < 1 
                         ? <div className='mx-auto my-auto d-flex flex-column align-items-center'>
                             <p className='gray-text'>This board is empty. Create a new task to get started.</p>
@@ -86,42 +101,53 @@ const Board = () => {
 
                         {board[1].cols.map((col) => (
                             <div key={col.id} className='board-col'>
-                                <div className='d-flex mt-3'>
+                                <motion.div className='d-flex mt-3'
+                                    initial={{opacity: 0, y: -20}} animate={{opacity: 1, y: 0}}
+                                    transition={{duration: 0.5}}>
                                     {col.name.toLowerCase() === 'todo' ? (<div className='dot blue-dot'></div>)
                                     : col.name.toLowerCase() === 'doing' ? (<div className='dot purple-dot'></div>)
                                     : col.name.toLowerCase() === 'done' ? (<div className='dot green-dot'></div>)
                                     : (<div className='dot'></div>)    
                                     }
                                     <h2 className='col-title ms-2'>{col.name.toUpperCase()} 
-                                         ({board[2].tasks.filter(task => task.column === col.id).length})
+                                            ({board[2].tasks.filter(task => task.column === col.id).length})
                                     </h2>
-                                </div>
+                                </motion.div>
                                 
                                 {tasksWithSubtasks[0].map(task => 
                                     task.column === col.id && (
-                                        <div key={task.id} className="task-card" onClick={() => showTaskModal(task.id)}>
-                                            <h2 className="task-card-title">{task.title}</h2>
-                                            <p className="task-card-subtasks">
-                                                subtasks <span>{task.subtasks.filter(sbtask => sbtask.isCompleted === true ).length} </span> 
-                                                    of {task.subtasks.length}
-                                                </p>
-                                        </div>
-                                    )
+                                        <motion.div key={task.id}  onClick={() => showTaskModal(task.id)}
+                                        initial={{opacity: 0, scale: 0.8}}
+                                        animate={{opacity: 1, scale: 1}}
+                                        transition={{duration: 0.5}}>
+                                            <div className="task-card">
+                                                <h2 className="task-card-title">{task.title}</h2>
+                                                <p className="task-card-subtasks">
+                                                    subtasks <span>{task.subtasks.filter(sbtask => sbtask.isCompleted === true ).length} </span> 
+                                                        of {task.subtasks.length}
+                                                    </p>
+                                            </div>
+                                        </motion.div>
+                                    )   
                                 )}
                                 
                             </div> 
                         ))}
 
-                        <div onClick={() => navigate(`/board/${id}/new-task`)} className='new-col'>
-                            <h2>+ New Task</h2>
-                        </div>
+
+                        <motion.div initial={{opacity: 0, scale: 0.8}} animate={{opacity: 1, scale: 1}}
+                        transition={{duration: 0.5}} onClick={() => navigate(`/board/${id}/new-task`)}>
+                            <div className='new-col'>
+                                <h2>+ New Task</h2>
+                            </div>
+                        </motion.div>
 
                         </div>) 
                     }
-                 </div>
-                )
-            }
-
+                    </>
+                    )}
+                </div>
+        
             <Outlet/>
         
         </>

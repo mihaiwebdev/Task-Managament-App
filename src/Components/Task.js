@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { updateTaskStatus, getTask } from '../actions/taskActions'
-import { listBoard } from '../actions/boardActions'
+import { updateTaskStatus } from '../actions/taskActions'
+import Spinner from '../Components/Spinner'
 import Message from '../Components/Message'
-import Loader from '../Components/Loader'
 
 
 const Task = () => {
@@ -13,36 +12,55 @@ const Task = () => {
     const navigate = useNavigate()
     const { id, taskID } = useParams()
 
+    const [task, setTask] = useState([])
+    const [subtasks, setSubtasks] = useState([])
     const [showActions, setShowActions] = useState(false)
+    const [currentStatus, setCurrentStatus] = useState('')
+    const [checkSubtask, setCheckSubtask] = useState([])
+
+    const boardList = useSelector(state => state.boardList)
+    const { board } = boardList
 
     const taskStatus = useSelector(state => state.taskStatus)
-    const { success, loading, error} = taskStatus
-
-    const taskList = useSelector(state => state.taskList)
-    const { loading:taskLoading, error:taskError, task, subtasks } = taskList
-
-    const editedTask = useSelector(state => state.editedTask)
-    const { success:editTaskSuccess } = editedTask
-
+    const { success: statusSuccess, loading: statusLoading, error: statusError } = taskStatus
 
     useEffect(() => {
 
-        if (success) {
-            dispatch(listBoard(id))
-            dispatch({type: 'TASK_STATUS_RESET'})
+        if (board && board.length > 0) {
+            
+            board[2].tasks.map(task => {
 
-        } else {
-            dispatch(getTask(taskID))
+                if (task.id === parseInt(taskID)) {
+                    setTask(task)
+                    setCurrentStatus(task.status)
+
+                    if (subtasks.length === 0) {
+
+                        board[3].subtasks.map(subtask => {
+                            
+                            if (subtask.task === task.id) {
+                                setSubtasks(prevState => {
+                                    
+                                    return [...prevState, subtask]
+                                    
+                                })
+                                
+                            }
+                            
+                            return null
+                        })
+                    }
+                }
+
+                return null
+            })
         }
 
-        if (editTaskSuccess) {
-
-            dispatch(listBoard(id))
-            dispatch({type: 'EDIT_TASK_RESET'})
+        if (statusSuccess) {
+            navigate(-1)
         }
-        
-    }, [id, taskID, success, editTaskSuccess, dispatch])
 
+    }, [navigate, board, taskID, subtasks, statusSuccess])
 
     const showSettings = () => {
         
@@ -56,7 +74,7 @@ const Task = () => {
     }
 
     const hideModal = (e) => {
-        if (e.target.classList.contains('task-modal')) {
+        if (e.target.classList.contains('task-modal') && !statusLoading) {
 
             setShowActions(false)
             navigate(`/board/${id}`)
@@ -64,12 +82,20 @@ const Task = () => {
         }
     }
 
-    const setTaskStatus = (e, id) => {
-        
-        dispatch(updateTaskStatus(id, e.target.checked, task.id))
-        
-        document.getElementById(`subtask-title-${id}`).classList.toggle('subtask-done')
 
+    const setTaskStatus = (id, e) => {
+      
+        document.getElementById(`subtask-title-${id}`).classList.toggle('subtask-done')
+          
+        setCheckSubtask(state => {
+
+            return [...state.filter(sbtask=> sbtask.id !== id),
+                {'id': id,
+                'isCompleted': e.target.checked
+                }
+            ]
+
+        })
     }
 
     const editTask = () => {
@@ -82,16 +108,23 @@ const Task = () => {
         navigate(`/board/${id}/task/${taskID}/delete`)
     }
 
+    const saveHandler = () => {
+    
+        if (checkSubtask.length > 0 || currentStatus) {
+            dispatch(updateTaskStatus(checkSubtask, currentStatus, taskID)) 
+            
+            
+        } else {
+            navigate(-1)
+        }
+    }
+
     return (
         <div className='task-modal' onClick={(e) => hideModal(e)}>
            
             <div className="open-task-card mx-auto">
-
-                {taskLoading || loading ? <Loader/> 
-                : taskError || error ? <Message variant='danger'>{
-                    error ? error : taskError && taskError
-                }</Message>
-                : (<>
+                {statusLoading ? <Spinner /> : statusError ? <Message>{statusError}</Message>
+                 : (<>    
                     <div className='d-flex justify-content-between align-items-center'>
                         <h2 className="modal-task-title">{task.title}</h2>
                         <div className='settings-dots' onClick={showSettings}>
@@ -111,8 +144,9 @@ const Task = () => {
 
                         <div key={subtask.id} className='subtask'>
                             <label className="checkbox-container">
-                                <input type="checkbox" onChange={(e) => setTaskStatus(e, subtask.id)}
-                                defaultChecked={subtask.isCompleted ? true : false} />
+                                <input type="checkbox"
+                                    onChange={(e) => setTaskStatus(subtask.id, e)}
+                                defaultChecked={subtask.isCompleted} />
                                 <span className="checkmark"></span>
                                 <p id={`subtask-title-${subtask.id}`} className={subtask.isCompleted ? 'subtask-done' : ''}>
                                     {subtask.title}
@@ -124,13 +158,22 @@ const Task = () => {
                     </div>
                     <p className="subtask-title mt-3">Current Status</p>
 
-                    <div className='task-status'>
-                        <p>{ task.status }</p>
-                    </div>
+                    <select id='select-status' className='task-status' 
+                        onChange={(e) => setCurrentStatus(e.target.value)} 
+                        value={currentStatus}>
+                        <option value="Todo">Todo</option>
+                        <option value="Doing">Doing</option>
+                        <option value="Done">Done</option>
+                    </select>
 
-                    </>) 
-                }
-                
+                    <button onClick={saveHandler} disabled={checkSubtask.length > 0 || currentStatus !== task.status
+                        ? false : true}
+                        className={`btn-primary-s mt-4 ${checkSubtask.length > 0 || currentStatus !== task.status 
+                        ? '' : 'opacity-25'}`}>Save Changes
+                    </button>
+
+                </>)}
+
             </div>
 
         </div>

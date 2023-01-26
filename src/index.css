@@ -53,6 +53,7 @@ input {
 option {
   background-color: var(--theme-body);
   color: var(--theme-text);
+  cursor: pointer;
 }
 
 a {
@@ -154,9 +155,23 @@ a:hover {
 
 #mobile-logo {
   display: none;
+  animation: logoAnim 0.5s ease-out;
 }
 #svg-logo {
   display: block;
+  animation: logoAnim 0.5s ease-out;
+}
+
+@keyframes logoAnim {
+  from { 
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
 }
 
 .navbar.bg-light {
@@ -194,11 +209,30 @@ a:hover {
 .btn-primary-l.add-task  {
   width: 164px;
   height: 48px;
+  animation: addTaskAnim 0.5s ease-out;
 }
 
 #mobile-add-task {
   display: none;
+  animation: addTaskAnim 0.5s ease-out;
 }
+
+#settings {
+  animation: addTaskAnim 0.5s ease-out  
+}
+
+@keyframes addTaskAnim {
+  from { 
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
 
 .mobile-nav {
   display: none;
@@ -403,6 +437,7 @@ a:hover {
   cursor: pointer;
   opacity: 0;
   transition: all 0.5s ease;
+  z-index: 10;
 }
 
 .show-sidebar.active {
@@ -419,6 +454,7 @@ a:hover {
 /* Main content */
 
 .tasks-layout {
+  position: relative;
   display: flex;
   width: 100%;
   height: 88vh;
@@ -556,11 +592,25 @@ a:hover {
   transform: translateY(-50%);
   background-color: var(--theme-navbar);
   width: 480px;
+  min-height: 150px;
   height: auto;
   padding: 30px;
   z-index: 5;
   border-radius: 6px;
   color: var(--theme-text);
+  animation: taskCardAnim 0.5s ease-out;
+}
+
+@keyframes taskCardAnim {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(-50%);
+  }
 }
 
 .modal-task-title {
@@ -678,6 +728,7 @@ a:hover {
   background-color: transparent;
   color: var(--theme-text);
   position: relative;
+  cursor: pointer;
 }
 
 .task-status p {
@@ -831,6 +882,7 @@ a:hover {
 
   .navbar {
     height: 64px !important;
+
   }
 
   #mobile-logo {
@@ -964,4 +1016,98 @@ a:hover {
     width: 100%;
   }
 
+}
+
+
+/* Spinner  */
+.lds-roller {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  align-self: center;
+  justify-self: center;
+  width: 80px;
+  height: 80px;
+}
+
+
+.lds-roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 40px 40px;
+}
+.lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  margin: -4px 0 0 -4px;
+}
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+.lds-roller div:nth-child(1):after {
+  top: 63px;
+  left: 63px;
+}
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+.lds-roller div:nth-child(2):after {
+  top: 68px;
+  left: 56px;
+}
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.lds-roller div:nth-child(3):after {
+  top: 71px;
+  left: 48px;
+}
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.lds-roller div:nth-child(4):after {
+  top: 72px;
+  left: 40px;
+}
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.lds-roller div:nth-child(5):after {
+  top: 71px;
+  left: 32px;
+}
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.lds-roller div:nth-child(6):after {
+  top: 68px;
+  left: 24px;
+}
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+.lds-roller div:nth-child(7):after {
+  top: 63px;
+  left: 17px;
+}
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.lds-roller div:nth-child(8):after {
+  top: 56px;
+  left: 12px;
+}
+@keyframes lds-roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
