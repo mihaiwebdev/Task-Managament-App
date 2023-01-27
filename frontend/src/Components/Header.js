@@ -92,8 +92,10 @@ const Header = () => {
                 </>)}
 
                 <div onClick={() => showMenu()} className='mobile-nav'>
-                    <h3 className='task-title'>{ board && board.length > 0 ? board[0].board.name : ('Select a board')}</h3>
-                    <svg className='mt-2 ms-2' width="10" height="7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="m1 1 4 4 4-4"/></svg>
+                    <h3 className='task-title'>{(boardEdit && board.length > 0 && boardEdit.id === board[0].board.id) 
+                        ? boardEdit.name : (board && board.length > 0) 
+                        ? board[0].board.name : ('')}</h3>
+                    <svg className='mt-2 ms-1 me-2' width="10" height="7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="m1 1 4 4 4-4"/></svg>
                 </div>
 
                 <div id="mobile-menu" className={showMobileMenu ? 'show' : ''}>

@@ -10,8 +10,8 @@ const LoginModal = ( ) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('TestingUser')
+    const [password, setPassword] = useState('123456')
 
     const userLogin = useSelector(state => state.userLogin) 
     const { loading, error, userInfo} = userLogin
