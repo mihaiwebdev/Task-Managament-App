@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('SK')
 DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost',
-                 'https://task-management.up.railway.app/']
+                 'task-management.up.railway.app']
 
 
 # Application definition
