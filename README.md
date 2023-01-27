@@ -1,70 +1,33 @@
-# Getting Started with Create React App
+# Kanban Task Management Full stack application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Distinctiveness and Complexity
 
-## Available Scripts
+    This project is built with Django on the back end and React with Redux on the front end. It's an application where you can manage your tasks by 3 columns: Todo, Doing and Done.
 
-In the project directory, you can run:
+## Files and folders created:
 
-### `npm start`
+- backend folder contains the project back end files
+- frontend folder contains all the front end logic, components, screens and styling
+- kanban folder contains the back end views, urls, models and serializers that I've created for the application
+- staticfiles folder contains all the collected css, js, img files and other static files.
+- requirements.txt contains all the packages that need to be installed in order to run the application
+- runtime.txt it's the python version used.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## How to run the application
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+    in the root folder run in cmd: python manage.py runserver
 
-### `npm test`
+## Description:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    On this applciation you can register and start creating your board with it's tasks and subtasks and change the tasks status, moving them in the columns Todo, Doing and Done.
 
-### `npm run build`
+    The application functionalities are:
+    - Register and Login authentication
+    - Create, edit, delete Boards
+    - Create, edit, delete Tasks or subtasks
+    - Change Tasks status by checking it's subtasks
+    - Dark, light theme
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    I built out the Database and API in the back end using Django and the front end using React with Redux, bootstrap, css and framer-motion.
+    When a user authenticate, a token is created in the back end using jwt and django rest framework and is stored in the redux state and used for authorization on the protected routes.
+    Each user action is dispatching a function which make a request to the back end using axios, where the requested action modifies the database and sends back data to the front end where it's catched and stored in the redux state from where is used to modify the DOM element.
