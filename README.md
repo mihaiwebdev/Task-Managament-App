@@ -2,7 +2,8 @@
 
 ## Distinctiveness and Complexity
 
-    This project is built with Django on the back end and React with Redux on the front end. It's an application where you can manage your tasks by 3 columns: Todo, Doing and Done.
+    This project is built with Django on the back end and React with Redux on the front end.
+    It's an application where you can manage your tasks by 3 columns: Todo, Doing and Done.
 
 ## Files and folders created:
 
