@@ -880,6 +880,10 @@ a:hover {
 
 @media(max-width: 768px) {
 
+  body {
+    overflow: auto !important;
+  }
+  
   .navbar {
     height: 64px !important;
     position: sticky !important;
