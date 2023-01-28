@@ -882,6 +882,8 @@ a:hover {
 
   .navbar {
     height: 64px !important;
+    position: sticky !important;
+    z-index: 10;
 
   }
 
@@ -983,6 +985,10 @@ a:hover {
     display: none;
   }
 
+  .tasks-layout {
+    overflow-y: hidden !important;
+    overflow-x: auto !important;
+  }
   .tasks-layout>div p{
     padding: 0px 20px;
   } 
@@ -991,13 +997,18 @@ a:hover {
     display: block;
   }
 
+  .board-col {
+    overflow-y: auto !important;
+    padding-bottom: 45px !important;
+  }
+
   .task-card-subtasks {
     padding: 0 !important;
   }
 
   .open-task-card {
     width: 343px !important;
-    min-height: auto;
+
   }
 
   #edit-task-modal .open-task-card {

@@ -85,11 +85,20 @@ const EditTask = ( ) => {
                 setNewSubtask(prevState => {
                     return [...prevState.filter(subtask => subtask.id !== id)]
                 })
+                
+                setEditedSubtask(prevState => {
+                    return [...prevState.filter(subtask => subtask.id !== id)]
+                })
 
             } else {
-                setSubtasks(state => {
-                    return [...state.filter(subtask => subtask.id !== id)]
-                })
+                if (subtasks.length === 1) {
+                    setSubtasks(['zer0Subtasks'])
+
+                } else {
+                    setSubtasks(state => {
+                        return [...state.filter(subtask => subtask.id !== id)]
+                    })
+                }
 
                 setDeletedSubtask(prevState => {
                     return [...prevState, {'deleteSubtask': id}]
@@ -168,7 +177,7 @@ const EditTask = ( ) => {
                             <label className='subtask-title' htmlFor="subtasks">Subtasks</label>
                             
                             <div className='subtasks-container'> 
-                            {subtasks.map((subtask) => (
+                            {subtasks[0] !== 'zer0Subtasks' && subtasks.map((subtask) => (
                                     <div key={subtask.id} className='subtask-input'>
                                         <input className='subtask-input-field' 
                                         defaultValue={subtask.title} 
