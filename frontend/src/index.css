@@ -1004,6 +1004,7 @@ a:hover {
   .board-col {
     overflow-y: auto !important;
     padding-bottom: 45px !important;
+    padding-right: 12px;
   }
 
   .task-card-subtasks {
